@@ -17,14 +17,14 @@
       let gameState = "L1";
 
       function preload() {
-        img1 = loadImage('https://upload.wikimedia.org/wikipedia/commons/1/10/Userbox_creeper.svg');
-        img2 = loadImage('https://upload.wikimedia.org/wikipedia/commons/1/12/Minecraft_Lego_head_%286790028921%29.jpg');
-        imgbg = loadImage('https://upload.wikimedia.org/wikipedia/commons/7/7a/Pixel_Art_Background.jpg');
+        // Using CORS-friendly placeholder images for testing
+        img1 = loadImage("https://i.imgur.com/NM5Gufz.png"); // Creeper head
+        img2 = loadImage("https://i.imgur.com/RKwfF5W.png"); // Cursor (Steve face)
+        imgbg = loadImage("https://i.imgur.com/8pZPuwQ.png"); // Pixel background
       }
 
       function setup() {
         createCanvas(600, 600);
-        background(250);
         textAlign(CENTER);
         textSize(20);
       }
@@ -33,15 +33,15 @@
         background(imgbg);
         noCursor();
 
-        if (gameState == "L1") {
+        if (gameState === "L1") {
           levelOne();
-        } else if (gameState == "L2") {
+        } else if (gameState === "L2") {
           levelTwo();
-        } else if (gameState == "L3") {
+        } else if (gameState === "L3") {
           levelThree();
-        } else if (gameState == "L4") {
+        } else if (gameState === "L4") {
           levelFour();
-        } else if (gameState == "L5") {
+        } else if (gameState === "L5") {
           winner();
         }
 
@@ -78,7 +78,7 @@
         if (distToBall < ballSize) {
           ballx = random(width);
           bally = random(height);
-          ballSize = max(5, ballSize - 1);
+          ballSize = max(10, ballSize - 1);
           score++;
         }
 
@@ -97,7 +97,7 @@
         if (distToBall < ballSize) {
           ballx = random(width);
           bally = random(height);
-          ballSize = max(5, ballSize - 1);
+          ballSize = max(10, ballSize - 1);
           score++;
         }
 
@@ -116,7 +116,7 @@
         if (distToBall < ballSize) {
           ballx = random(width);
           bally = random(height);
-          ballSize = max(5, ballSize - 1);
+          ballSize = max(10, ballSize - 1);
           score++;
         }
 
