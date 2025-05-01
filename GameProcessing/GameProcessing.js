@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <title>Minecraft Click Game</title>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
   </head>
@@ -18,9 +18,9 @@
 
       function preload() {
         // Using CORS-friendly placeholder images for testing
-        img1 = loadImage("https://i.imgur.com/NM5Gufz.png"); // Creeper head
-        img2 = loadImage("https://i.imgur.com/RKwfF5W.png"); // Cursor (Steve face)
-        imgbg = loadImage("https://i.imgur.com/8pZPuwQ.png"); // Pixel background
+        img1 = loadImage('https://Nate-Mei.github.io/images/Creeper.png'); // Creeper head
+        img2 = loadImage('https://Nate-Mei.github.io/images/Steve.png'); // Cursor (Steve face)
+        imgbg = loadImage('https://Nate-Mei.github.io/images/MinecraftBG.png'); // Pixel background
       }
 
       function setup() {
