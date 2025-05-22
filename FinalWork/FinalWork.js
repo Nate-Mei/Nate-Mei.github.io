@@ -104,7 +104,7 @@ function endScreen() {
   textSize(40);
   text("Score: " + score, width / 2, height / 2 + 20);
   textSize(30);
-  text("Refresh to play again", width / 2, height / 2 + 70);
+  text("Tap to play again", width / 2, height / 2 + 70);
 }
   
 }
