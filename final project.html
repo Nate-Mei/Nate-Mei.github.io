@@ -1,29 +1,243 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Nathan Mei Portfolio</title>
-  <meta charset="utf-8">
+  <title>Nathan Mei Portfolio</title>
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/p5@1.9.0/lib/p5.min.js"></script>
 </head>
 <body>
 
 <div class="container-fluid">
+  <nav class="navbar navbar-expand-sm bg-light">
+    <div class="container-fluid">
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="glitch.html">Glitch</a></li>
+        <li class="nav-item"><a class="nav-link" href="mash.html">Mash</a></li>
+        <li class="nav-item"><a class="nav-link" href="3D.html">3D</a></li>
+        <li class="nav-item"><a class="nav-link" href="minecraft.html">minecraft</a></li>
+        <li class="nav-item"><a class="nav-link" href="selfie.html">Selfie</a></li>
+        <li class="nav-item"><a class="nav-link" href="minecraft-game.html">Game</a></li>
+        <li class="nav-item"><a class="nav-link" href="net-in/index.html">Net In</a></li>
+      </ul>
+    </div>
+  </nav>
 
-<nav class="navbar navbar-expand-sm bg-light">
-<div class="container-fluid">
-
-<ul class="navbar-nav">
-  <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-  <li class="nav-item"><a class="nav-link" href="glitch.html">Glitch</a></li>
-  <li class="nav-item"><a class="nav-link" href="mash.html">Mash</a></li>
-  <li class="nav-item"><a class="nav-link" href="3D.html">3D</a></li>
-  <li class="nav-item"><a class="nav-link" href="minecraft.html">minecraft</a></li>
-  <li class="nav-item"><a class="nav-link" href="selfie.html">Selfie</a></li>
-  <li class="nav-item"><a class="nav-link" href="minecraft-game.html">Game</a></li>
-  <li class="nav-item"><a class="nav-link" href="net-in/index.html">Net In</a></li>
-</ul>
-
+  <h1>Nathan Portfolio</h1>
+  <p>This is a platformer game project called <strong>Coins, Coins, Coins</strong>.</p>
 </div>
-</nav>
+
+<script>
+// Global variables
+let stage = 0;
+let p1X = 400, p1Y = 375, pWidth = 110, pHeight = 160;
+let b1X = 200, b1Y = 300, b2X = 600, b2Y = 300, bWidth = 250, bHeight = 150;
+let c1X = 600, c1Y = 410, cWidth = 30, cHeight = 30;
+let score = 0, timer = 30, startTime, timeLeft = timer;
+let jump = false, direction = 1, velocity = 5, jumpPower = 15, fallSpeed = 5;
+let minHeight = 360, maxHeight = 50, jumpCounter = 0;
+let player, platform, bg, coin;
+
+// Load assets
+function preload() {
+  player = loadImage("FinalWork/player360.png");
+  bg = loadImage("FinalWork/background.png");
+  platform = loadImage("FinalWork/platform.png");
+  coin = loadImage("FinalWork/coin.png");
+
+}
+
+// Setup
+function setup() {
+  console.log("setup called");
+  createCanvas(800, 500);
+  rectMode(CENTER);
+  textAlign(CENTER);
+  imageMode(CENTER);
+}
+
+// Draw loop
+function draw() {
+  gravity();
+
+  if (stage === 0) {
+    splash();
+  } else if (stage === 1) {
+    game();
+  } else if (stage === 2) {
+    endScreen();
+  }
+
+  if (mouseIsPressed) {
+    if (stage === 0 || stage === 2) {
+      resetGame();
+      stage = 1;
+      startTime = millis();
+    }
+  }
+
+  // Movement input
+  if (keyIsDown(LEFT_ARROW)) p1X -= 2;
+  if (keyIsDown(RIGHT_ARROW)) p1X += 2;
+}
+
+// Splash screen
+function splash() {
+  background(150, 230, 240);
+  image(bg, width / 2, height / 2, width, height);
+  textSize(80);
+  text('Coins, Coins, Coins', width / 2, 120);
+  textSize(40);
+  text('By: Nathan Mei', width / 2, 180);
+  textSize(35);
+  text('*How to Play', width / 2, 270);
+  text('*Use Arrow Keys To Move Left And Right', width / 2, 330);
+  text('*Use Up Arrow To Jump', width / 2, 380);
+  text('*Get Coins Before Time Runs Out', width / 2, 430);
+  text('*Click The Screen To Start', width / 2, 480);
+}
+
+// Game logic
+function game() {
+  background(150, 230, 240);
+  image(bg, width / 2, height / 2, width, height);
+
+  noStroke();
+  fill(100, 200, 75);
+  rect(width / 2, 450, width, 100);
+
+  stroke(0);
+  strokeWeight(15);
+  noFill();
+  rect(width / 2, height / 2, width, height);
+
+  image(platform, b1X, b1Y, bWidth, bHeight);
+  image(platform, b2X, b2Y, bWidth, bHeight);
+
+  image(player, p1X, p1Y, pWidth, pHeight);
+  p1X = constrain(p1X, pWidth / 2, width - pWidth / 2);
+
+  textSize(25);
+  fill(0);
+  text('Points:', 60, 60);
+  text(score, 120, 60);
+
+  // Platform collision
+  if (checkPlatform(b1X, b1Y) || checkPlatform(b2X, b2Y)) {
+    p1Y = b1Y - 100;
+    velocity = 0;
+    jumpCounter = 0;
+  }
+
+  // Coin
+  image(coin, c1X, c1Y, cWidth, cHeight);
+  if (checkCoinCollision()) {
+    score++;
+    c1X = random(cWidth / 2, width - cWidth / 2);
+    c1Y = random(100, minHeight - cHeight - 50);
+  }
+
+  // Timer
+  let elapsed = floor((millis() - startTime) / 1000);
+  timeLeft = max(0, timer - elapsed);
+  textSize(25);
+  text("Time Left: " + timeLeft, width - 90, 60);
+
+  if (timeLeft === 0) stage = 2;
+}
+
+// Gravity
+function gravity() {
+  if (p1Y >= minHeight && !jump) {
+    jumpCounter = 0;
+  } else {
+    p1Y += direction * velocity;
+  }
+
+  if (jump) {
+    if (p1Y <= maxHeight || jumpCounter >= jumpPower) {
+      velocity = fallSpeed;
+    } else {
+      velocity = -jumpPower;
+      jumpCounter++;
+    }
+  } else {
+    velocity = fallSpeed;
+  }
+}
+
+// Collision with platform
+function checkPlatform(bx, by) {
+  return (
+    p1X >= bx - bWidth / 2 &&
+    p1X <= bx + bWidth / 2 &&
+    p1Y + pHeight - 92 >= by - bHeight / 2 &&
+    p1Y + pHeight - 92 <= by + bHeight / 2 &&
+    !jump
+  );
+}
+
+// Coin collision
+function checkCoinCollision() {
+  let coinLeft = c1X - cWidth / 2;
+  let coinRight = c1X + cWidth / 2;
+  let coinTop = c1Y - cHeight / 2;
+  let coinBottom = c1Y + cHeight / 2;
+
+  let playerLeft = p1X - pWidth / 2;
+  let playerRight = p1X + pWidth / 2;
+  let playerTop = p1Y - pHeight / 2;
+  let playerBottom = p1Y + pHeight / 2;
+
+  return (
+    playerRight >= coinLeft &&
+    playerLeft <= coinRight &&
+    playerBottom >= coinTop &&
+    playerTop <= coinBottom
+  );
+}
+
+// End screen
+function endScreen() {
+  background(0);
+  fill(255);
+  textSize(60);
+  text("Time's Up!", width / 2, height / 2 - 40);
+  textSize(40);
+  text("Score: " + score, width / 2, height / 2 + 20);
+  textSize(30);
+  text("Tap to play again", width / 2, height / 2 + 70);
+}
+
+// Key events
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    jump = true;
+  }
+}
+
+function keyReleased() {
+  if (keyCode === UP_ARROW) {
+    jump = false;
+  }
+}
+
+// Reset game state
+function resetGame() {
+  score = 0;
+  p1X = 400;
+  p1Y = 375;
+  velocity = fallSpeed;
+  jump = false;
+  jumpCounter = 0;
+  c1X = random(cWidth / 2, width - cWidth / 2);
+  c1Y = random(100, minHeight - cHeight - 50);
+  startTime = millis();
+}
+</script>
+
+</body>
+</html>
